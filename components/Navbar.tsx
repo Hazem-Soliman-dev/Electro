@@ -14,32 +14,23 @@ export const Navbar = () => {
   const { locale, t, toggleLocale } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { cartCount } = useCart();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
   // Helper to check active routes
   const isActive = (path: string) => pathname === path;
-
-  // Let anyone who is signed in view admin button for prototype review, but we'll flag it
-  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
     <>
       {/* Desktop & Mobile Header (Top) */}
-      <header className="sticky top-0 z-40 w-full glass-effect shadow-xs border-b border-zinc-200/50 dark:border-zinc-800/50 transition-colors">
+      <header className="sm:nav-desktop top-0 z-40 w-full glass-effect shadow-xs border-b border-zinc-200/50 dark:border-zinc-800/50 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent group-hover:scale-102 transition-transform duration-200">
+          <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+            <span className="whitespace-nowrap text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent group-hover:scale-102 transition-transform duration-200">
               {t("brand")}
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="sm:flex items-center gap-8 font-medium">
+          <nav className="nav-desktop sm:flex items-center gap-8 font-medium">
             <Link
               href="/"
               className={`transition-colors duration-200 hover:text-orange-500 text-sm ${
@@ -127,81 +118,10 @@ export const Navbar = () => {
         </div>
       </header>
 
-      {/* Mobile Dropdown Navigation */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md">
-          <nav
-            id="mobile-nav"
-            className="max-w-7xl mx-auto px-4 pb-4 pt-2 flex flex-col gap-1 text-sm font-medium"
-          >
-            <Link
-              href="/"
-              onClick={closeMobileMenu}
-              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
-                isActive("/")
-                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
-                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <Home size={16} />
-                {t("home")}
-              </span>
-            </Link>
-            <Link
-              href="/cart"
-              onClick={closeMobileMenu}
-              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
-                isActive("/cart")
-                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
-                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <ShoppingBag size={16} />
-                {t("cart")}
-              </span>
-              {cartCount > 0 && (
-                <span className="px-2 py-0.5 text-[10px] font-black rounded-full bg-orange-500 text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              href="/orders"
-              onClick={closeMobileMenu}
-              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
-                isActive("/orders")
-                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
-                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <ReceiptText size={16} />
-                {t("orders")}
-              </span>
-            </Link>
-            <Link
-              href="/admin"
-              onClick={closeMobileMenu}
-              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
-                isActive("/admin")
-                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
-                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <ShieldCheck size={16} />
-                {t("admin")}
-              </span>
-            </Link>
-          </nav>
-        </div>
-      )}
 
-      {/* Mobile Bottom Navigation Bar */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-zinc-200/50 dark:border-zinc-800/50 transition-colors pb-safe">
-        <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+
+      <div className="nav-mobile-only fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-zinc-200/50 dark:border-zinc-800/50 transition-colors pb-safe">
+        <div className="flex justify-around items-center h-16 w-full max-w-lg mx-auto">
           {/* Home Link */}
           <Link
             href="/"

@@ -1,5 +1,8 @@
 @import "tailwindcss";
-/* Force recompile of Tailwind v4 classes: 1 */
+
+/* Tell Tailwind v4 exactly where to scan for utility classes */
+@source "../components/**/*.{tsx,ts}";
+@source "../app/**/*.{tsx,ts}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -55,4 +58,24 @@ body {
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #4b5563;
+}
+
+/* Desktop nav — guaranteed responsive rule, bypasses Tailwind class-scan */
+.nav-desktop {
+  display: none;
+}
+@media (min-width: 640px) {
+  .nav-desktop {
+    display: flex;
+  }
+}
+
+/* Mobile-only elements — inverse of nav-desktop */
+.nav-mobile-only {
+  display: block;
+}
+@media (min-width: 640px) {
+  .nav-mobile-only {
+    display: none;
+  }
 }
