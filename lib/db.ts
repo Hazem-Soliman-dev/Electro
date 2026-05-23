@@ -164,6 +164,9 @@ export const dbActions = {
       }));
     } catch (err) {
       console.warn("DB query failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.getOrders();
     }
   },
@@ -182,6 +185,9 @@ export const dbActions = {
       }));
     } catch (err) {
       console.warn("DB query failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.getOrdersByUserId(userId);
     }
   },
@@ -200,6 +206,9 @@ export const dbActions = {
       };
     } catch (err) {
       console.warn("DB query failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.getOrderById(id);
     }
   },
@@ -221,6 +230,8 @@ export const dbActions = {
         paymentStatus: "pending",
         polarCheckoutId: order.polarCheckoutId || null,
         status: "pending",
+        deliveryAddress: order.deliveryAddress,
+        deliveryPhone: order.deliveryPhone,
       }).returning();
       const created = results[0];
       return {
@@ -229,6 +240,9 @@ export const dbActions = {
       };
     } catch (err) {
       console.warn("DB insert order failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.createOrder(order);
     }
   },
@@ -250,6 +264,9 @@ export const dbActions = {
       };
     } catch (err) {
       console.warn("DB update status failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.updateOrderStatus(id, status);
     }
   },
@@ -275,6 +292,9 @@ export const dbActions = {
       };
     } catch (err) {
       console.warn("DB update payment status failed, falling back to mock storage:", err);
+      if (!useFallback()) {
+        throw err;
+      }
       return await mockDb.updateOrderPaymentStatus(id, paymentStatus);
     }
   }
