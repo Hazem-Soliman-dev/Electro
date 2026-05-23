@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { OrderItem } from "@/lib/schema";
 
 export interface CartItem {
   id: string; // menuItemId

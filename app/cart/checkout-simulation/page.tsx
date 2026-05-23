@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { CreditCard, Shield, ChevronRight, Lock, ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { CreditCard, Lock, ArrowLeft, Loader2, Sparkles } from "lucide-react";
 
 function CheckoutSimulationContent() {
   const router = useRouter();

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
-import { useCart, CartItem } from "@/components/CartProvider";
+import { useCart } from "@/components/CartProvider";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Trash2, Plus, Minus, ShoppingBag, CreditCard, Truck } from "lucide-react";

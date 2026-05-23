@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { useTheme } from "./ThemeProvider";
 import { useCart } from "./CartProvider";
-import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, Show, UserButton, useUser } from "@clerk/nextjs";
 import { Home, ShoppingBag, ReceiptText, ShieldCheck, Sun, Moon, Languages } from "lucide-react";
 
 export const Navbar = () => {
@@ -32,14 +32,14 @@ export const Navbar = () => {
       <header className="sticky top-0 z-40 w-full glass-effect shadow-xs border-b border-zinc-200/50 dark:border-zinc-800/50 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="hidden sm:flex items-center gap-2 group">
             <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent group-hover:scale-102 transition-transform duration-200">
               {t("brand")}
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="sm:flex items-center gap-8 font-medium">
+          <nav className="sm:flex  items-center gap-8 font-medium">
             <Link
               href="/"
               className={`transition-colors duration-200 hover:text-orange-500 text-sm ${

@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Electro Pi
+
+Electro Pi is a Next.js food-ordering prototype with bilingual UI, cart and order flows, authenticated admin pages, and a Polar-powered payment path with a local checkout simulator fallback.
+
+## What It Does
+
+- Browse menu items on the homepage.
+- Add items to a cart and place an order.
+- Switch between cash-on-delivery and Polar checkout.
+- View past orders in an authenticated orders page.
+- Manage menu content from the admin dashboard.
+- Upload menu images with Uploadthing when configured.
+
+## Stack
+
+- Next.js 16 with the App Router
+- React 19 and TypeScript
+- Clerk for authentication
+- Drizzle ORM with Neon/Postgres support
+- Polar for payment checkout
+- Uploadthing for media uploads
+- Tailwind CSS v4 for styling
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start the development server
+- `npm run build` - build the app for production
+- `npm run start` - start the production server
+- `npm run lint` - run ESLint
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a local `.env` file with the values your deployment needs.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `DATABASE_URL` - Neon/Postgres connection string
+- `NEXT_PUBLIC_APP_URL` - public app URL used for checkout redirects
+- `POLAR_ACCESS_TOKEN` - Polar API token
+- `POLAR_PRODUCT_ID` - Polar product ID for real checkout sessions
+- `POLAR_WEBHOOK_SECRET` - Polar webhook verification secret
+- `UPLOADTHING_TOKEN` - Uploadthing token for image uploads
+- Clerk authentication keys - required by `@clerk/nextjs`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If `DATABASE_URL` is missing, the app falls back to the in-memory mock database. That is fine for short local sessions, but order data will not persist reliably across requests.
 
-## Deploy on Vercel
+If Polar is not configured, checkout redirects to the local simulator at `/cart/checkout-simulation`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Key Routes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/` - menu and landing page
+- `/cart` - cart and checkout flow
+- `/cart/checkout-simulation` - local Polar simulator
+- `/orders` - authenticated order history
+- `/admin` - authenticated admin dashboard
+- `/sign-in` and `/sign-up` - Clerk auth flows
+
+Useful aliases:
+
+- `/onsite-pay`
+- `/cart/onsite-pay`
+
+Both redirect to the checkout simulation path.
+
+## Notes
+
+- The app uses a fallback mock store when Neon is unavailable.
+- Orders are protected by Clerk middleware.
+- The UI supports English and Arabic, with theme toggling and a responsive mobile nav.
