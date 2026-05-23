@@ -1,38 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { useTheme } from "./ThemeProvider";
 import { useCart } from "./CartProvider";
-import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, Show, UserButton, useUser } from "@clerk/nextjs";
 import { Home, ShoppingBag, ReceiptText, ShieldCheck, Sun, Moon, Languages, Menu, X } from "lucide-react";
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const { locale, t, toggleLocale } = useLanguage();
+  const { locale, dir, t, toggleLocale } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { cartCount } = useCart();
-  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useUser();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   // Helper to check active routes
   const isActive = (path: string) => pathname === path;
 
+  // Let anyone who is signed in view admin button for prototype review, but we'll flag it
+  const showAdminLink = !!user;
+  const toggleMobileMenu = () => setMobileMenuOpen((open) => !open);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <>
-      {/* Header (Top) */}
+      {/* Desktop & Mobile Header (Top) */}
       <header className="sticky top-0 z-40 w-full glass-effect shadow-xs border-b border-zinc-200/50 dark:border-zinc-800/50 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent group-hover:scale-102 transition-transform duration-200">
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent group-hover:scale-102 transition-transform duration-200">
               {t("brand")}
             </span>
           </Link>
 
-          {/* Desktop Navigation Links - Shown inline on screens >= 640px */}
-          <nav className="hidden sm:flex items-center gap-6 md:gap-8 font-medium">
+          {/* Desktop Navigation Links */}
+          <nav className="sm:flex items-center gap-8 font-medium">
             <Link
               href="/"
               className={`transition-colors duration-200 hover:text-orange-500 text-sm ${
@@ -74,11 +84,12 @@ export const Navbar = () => {
           </nav>
 
           {/* Settings & Auth Buttons */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-3 sm:gap-4">
+
             {/* Language Toggle */}
             <button
               onClick={toggleLocale}
-              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400 transition-all duration-200 active:scale-95 cursor-pointer"
+              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400 transition-all duration-200 active:scale-95"
               aria-label="Toggle Language"
             >
               <span className="text-xs font-black uppercase flex items-center gap-1 select-none">
@@ -90,14 +101,14 @@ export const Navbar = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400 transition-all duration-200 active:scale-95 cursor-pointer"
+              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400 transition-all duration-200 active:scale-95"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 
             {/* User Auth Info */}
-            <div className="border-l border-zinc-200/50 dark:border-zinc-800/50 pl-2 sm:pl-4 flex items-center">
+            <div className="border-l border-zinc-200/50 dark:border-zinc-800/50 pl-3 sm:pl-4 flex items-center">
               <Show when="signed-in">
                 <UserButton
                   appearance={{
@@ -117,57 +128,81 @@ export const Navbar = () => {
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Mobile Navigation Dropdown Links (Hidden on desktop >= 640px) */}
-        {isOpen && (
-          <nav className="sm:hidden bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-t border-zinc-200/50 dark:border-zinc-800/50 py-4 px-6 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
+      {/* Mobile Dropdown Navigation */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md">
+          <nav
+            id="mobile-nav"
+            className="max-w-7xl mx-auto px-4 pb-4 pt-2 flex flex-col gap-1 text-sm font-medium"
+          >
             <Link
               href="/"
-              onClick={() => setIsOpen(false)}
-              className={`transition-colors duration-200 hover:text-orange-500 text-sm font-bold py-1.5 ${
-                isActive("/") ? "text-orange-500" : "text-zinc-600 dark:text-zinc-400"
+              onClick={closeMobileMenu}
+              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
+                isActive("/")
+                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
+                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
               }`}
             >
-              {t("home")}
+              <span className="flex items-center gap-2">
+                <Home size={16} />
+                {t("home")}
+              </span>
             </Link>
             <Link
               href="/cart"
-              onClick={() => setIsOpen(false)}
-              className={`relative transition-colors duration-200 hover:text-orange-500 text-sm font-bold py-1.5 flex items-center gap-1.5 ${
-                isActive("/cart") ? "text-orange-500" : "text-zinc-600 dark:text-zinc-400"
+              onClick={closeMobileMenu}
+              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
+                isActive("/cart")
+                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
+                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
               }`}
             >
-              {t("cart")}
+              <span className="flex items-center gap-2">
+                <ShoppingBag size={16} />
+                {t("cart")}
+              </span>
               {cartCount > 0 && (
-                <span className="px-1.5 py-0.5 text-[9px] font-black rounded-full bg-orange-500 text-white ml-1">
+                <span className="px-2 py-0.5 text-[10px] font-black rounded-full bg-orange-500 text-white">
                   {cartCount}
                 </span>
               )}
             </Link>
             <Link
               href="/orders"
-              onClick={() => setIsOpen(false)}
-              className={`transition-colors duration-200 hover:text-orange-500 text-sm font-bold py-1.5 ${
-                isActive("/orders") ? "text-orange-500" : "text-zinc-600 dark:text-zinc-400"
+              onClick={closeMobileMenu}
+              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
+                isActive("/orders")
+                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
+                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
               }`}
             >
-              {t("orders")}
+              <span className="flex items-center gap-2">
+                <ReceiptText size={16} />
+                {t("orders")}
+              </span>
             </Link>
             <Link
               href="/admin"
-              onClick={() => setIsOpen(false)}
-              className={`transition-colors duration-200 hover:text-orange-500 text-sm font-bold py-1.5 flex items-center gap-1.5 ${
-                isActive("/admin") ? "text-orange-500" : "text-zinc-600 dark:text-zinc-400"
+              onClick={closeMobileMenu}
+              className={`flex items-center justify-between rounded-md px-3 py-2 transition-colors ${
+                isActive("/admin")
+                  ? "bg-orange-50/70 text-orange-600 dark:bg-orange-500/10"
+                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/60"
               }`}
             >
-              <ShieldCheck size={16} />
-              {t("admin")}
+              <span className="flex items-center gap-2">
+                <ShieldCheck size={16} />
+                {t("admin")}
+              </span>
             </Link>
           </nav>
-        )}
-      </header>
+        </div>
+      )}
 
-      {/* Mobile Bottom Navigation Bar (Hidden on desktop/tablet >= 640px) */}
+      {/* Mobile Bottom Navigation Bar */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-zinc-200/50 dark:border-zinc-800/50 transition-colors pb-safe">
         <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
           {/* Home Link */}
