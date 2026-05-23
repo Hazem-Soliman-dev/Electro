@@ -43,7 +43,7 @@ export const HomeClient: React.FC<HomeClientProps> = ({ initialItems }) => {
           <div className="relative z-10 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-md">
               <Flame size={12} className="text-amber-300 animate-pulse" />
-              <span>Electro Pi Prototype</span>
+              <span>{t("heroBadge")}</span>
             </div>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight drop-shadow-md">
               {t("heroTitle")}
@@ -56,11 +56,11 @@ export const HomeClient: React.FC<HomeClientProps> = ({ initialItems }) => {
             <div className="mt-8 flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm font-semibold text-orange-50">
               <div className="flex items-center gap-2">
                 <Award size={16} className="text-amber-300" />
-                <span>Premium Quality</span>
+                <span>{t("premiumQuality")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={16} className="text-amber-300" />
-                <span>Hot & Fast Delivery</span>
+                <span>{t("hotFastDelivery")}</span>
               </div>
             </div>
           </div>

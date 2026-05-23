@@ -6,15 +6,14 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { useTheme } from "./ThemeProvider";
 import { useCart } from "./CartProvider";
-import { SignInButton, Show, UserButton, useUser } from "@clerk/nextjs";
-import { Home, ShoppingBag, ReceiptText, ShieldCheck, Sun, Moon, Languages, Menu, X } from "lucide-react";
+import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { Home, ShoppingBag, ReceiptText, ShieldCheck, Sun, Moon, Languages } from "lucide-react";
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const { locale, dir, t, toggleLocale } = useLanguage();
+  const { locale, t, toggleLocale } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { cartCount } = useCart();
-  const { user } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -25,8 +24,6 @@ export const Navbar = () => {
   const isActive = (path: string) => pathname === path;
 
   // Let anyone who is signed in view admin button for prototype review, but we'll flag it
-  const showAdminLink = !!user;
-  const toggleMobileMenu = () => setMobileMenuOpen((open) => !open);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (

@@ -40,6 +40,11 @@ const translations = {
     outOfStock: "Out of Stock",
     addedToCart: "Added!",
 
+    // hero
+    heroBadge: "Electro Pi Prototype",
+    premiumQuality: "Premium Quality",
+    hotFastDelivery: "Hot & Fast Delivery",
+
     // Cart & Checkout
     cartTitle: "Your Cart",
     cartEmpty: "Your cart is empty. Start adding some delicious items!",
@@ -151,6 +156,11 @@ const translations = {
     addToCart: "إضافة إلى السلة",
     outOfStock: "نفذت الكمية",
     addedToCart: "تمت الإضافة!",
+
+    // hero
+    heroBadge: "إلكترو باي - نموذج أولي",
+    premiumQuality: "جودة عالية",
+    hotFastDelivery: "توصيل سريع وساخن",
 
     // Cart & Checkout
     cartTitle: "سلتك",
